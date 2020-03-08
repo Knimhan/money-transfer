@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,11 +34,14 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void shouldCreateAccountSuccessfully() {
+    public void shouldCreateAccountSuccessfully() { //TODO: modify this??
 
         //given
-        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(100));
+        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(100), null, null);
         when(accountDAO.insert(any(Account.class))).thenReturn(1);
+        when(accountDAO.getByUuid(any(UUID.class)))
+                .thenReturn(new Account(UUID.randomUUID(),
+                        accountRequestDTO.getBalance(), null, null));
 
         //when
         accountServiceUnderTest.save(accountRequestDTO);
@@ -51,7 +55,7 @@ public class AccountServiceTest {
     public void shouldThrowExceptionWhenBalanceIsInvalid() {
 
         //given
-        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(-10));
+        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(-10), null, null);
 
         //when
         Throwable exception = assertThrows(BadTransactionRequestException.class,
@@ -59,7 +63,22 @@ public class AccountServiceTest {
 
         //then
         assertEquals("Money transfer application has failed due to wrong inputs: " +
-                        "Balance cant not be null or less than zero",
+                        "Balance can not be null or less than zero",
+                exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUuidIsWrong() {
+        //given
+        String uuid = "wrong-uuid";
+
+        //when
+        Throwable exception = assertThrows(BadTransactionRequestException.class,
+                () -> accountServiceUnderTest.getOne(uuid));
+
+        //then
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Invalid uuid",
                 exception.getMessage());
     }
 

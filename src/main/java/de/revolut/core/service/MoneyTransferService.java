@@ -27,7 +27,6 @@ public class MoneyTransferService {
     public void transfer(MoneyTransferDTO moneyTransferDTO) {
 
         validate(moneyTransferDTO);
-
         transfer(getByUuid(moneyTransferDTO.getReceiverAccountUuid()),
                 getByUuid(moneyTransferDTO.getSenderAccountUuid()),
                 moneyTransferDTO.getAmount());
@@ -42,6 +41,7 @@ public class MoneyTransferService {
 
 
     private void validate(MoneyTransferDTO moneyTransferDTO) {
+
         if (moneyTransferDTO.getAmount() == null || moneyTransferDTO.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadTransactionRequestException("Amount to be transferred can not be null or negative");
         }
@@ -59,6 +59,7 @@ public class MoneyTransferService {
     private synchronized void transfer(Account receiverAccount,
                                        Account senderAccount,
                                        BigDecimal amount) {
+
         if (senderAccount.getBalance().subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
             throw new InsufficientBalanceException("Insufficient funds at senders account to make the transfer");
         }

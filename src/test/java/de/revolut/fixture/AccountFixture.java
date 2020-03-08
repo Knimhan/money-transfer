@@ -21,11 +21,11 @@ public class AccountFixture {
     }
 
     public static Account receiverAccount() {
-        return new Account(receiverAccountUUID, BigDecimal.TEN);
+        return new Account(receiverAccountUUID, BigDecimal.TEN, null, null);
     }
 
     public static Account senderAccount() {
-        return new Account(senderAccountUUID, BigDecimal.TEN);
+        return new Account(senderAccountUUID, BigDecimal.TEN, null, null);
     }
 
     public static MoneyTransferDTO getSuccessfulMoneyTransferDTO() {

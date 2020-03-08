@@ -118,8 +118,8 @@ public class MoneyTransferServiceTest {
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
                 senderAccountUuid, amountTobeTransferred);
         //when
-        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(new Account(receiverAccountUuid, new BigDecimal(50)));
-        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(new Account(senderAccountUuid, new BigDecimal(50)));
+        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(new Account(receiverAccountUuid, new BigDecimal(50), null, null));
+        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(new Account(senderAccountUuid, new BigDecimal(50), null, null));
         Throwable exception = assertThrows(InsufficientBalanceException.class,
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
@@ -137,8 +137,8 @@ public class MoneyTransferServiceTest {
         BigDecimal amountTobeTransferred = new BigDecimal(10);
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
                 senderAccountUuid, amountTobeTransferred);
-        Account receiverAccount = new Account(receiverAccountUuid, new BigDecimal(50));
-        Account senderAccount = new Account(senderAccountUuid, new BigDecimal(50));
+        Account receiverAccount = new Account(receiverAccountUuid, new BigDecimal(50), null, null);
+        Account senderAccount = new Account(senderAccountUuid, new BigDecimal(50), null, null);
         //when
         when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(receiverAccount);
         when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(senderAccount);

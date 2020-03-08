@@ -11,15 +11,21 @@ public class Account {
 
     private BigDecimal balance;
 
+    private String accountHolder;
+
+    private String currency;
+
     public Account() {
     }
 
-    public Account(UUID id, BigDecimal balance) {
+    public Account(UUID id, BigDecimal balance, String accountHolder, String currency) {
         this.id = id;
         this.balance = balance;
+        this.accountHolder = accountHolder;
+        this.currency = currency;
     }
 
-    @JsonProperty
+    @JsonProperty //TODO:remove
     public UUID getId() {
         return id;
     }
@@ -27,5 +33,13 @@ public class Account {
     @JsonProperty
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public String getAccountHolder() {
+        return accountHolder;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 }

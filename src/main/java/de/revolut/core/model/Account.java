@@ -25,12 +25,10 @@ public class Account {
         this.currency = currency;
     }
 
-    @JsonProperty //TODO:remove
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty
     public BigDecimal getBalance() {
         return balance;
     }

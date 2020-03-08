@@ -12,10 +12,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource {
 
-    //TODO: make sure idempotent all
-    //TODO: add Validation @NotNull @Valid etc
-    //TODO: ERROR DTO
-
     private AccountService accountService;
 
     public AccountResource(AccountService accountService) {
@@ -31,15 +27,6 @@ public class AccountResource {
                 .build();
     }
 
-    @POST
-    @Timed
-    public Response post(AccountRequestDTO accountRequestDTO) {
-
-        return Response.ok()
-                .entity(accountService.save(accountRequestDTO))
-                .build();
-    }
-
     @GET
     @Path("{uuid}")
     @Timed
@@ -50,6 +37,12 @@ public class AccountResource {
                 .build();
     }
 
-    //TODO : Question : Should we also have something /accounts/{accId} to get accountDetails for individual account.
+    @POST
+    @Timed
+    public Response post(AccountRequestDTO accountRequestDTO) {
 
+        return Response.ok()
+                .entity(accountService.save(accountRequestDTO))
+                .build();
+    }
 }

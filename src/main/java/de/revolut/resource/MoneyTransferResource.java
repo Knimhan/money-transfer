@@ -26,7 +26,6 @@ public class MoneyTransferResource {
     @POST
     @Timed
     public Response transfer(MoneyTransferDTO moneyTransferDTO) {
-        //TODO: return??
         moneyTransferService.transfer(moneyTransferDTO);
         return Response.ok().build();
     }

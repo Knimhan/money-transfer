@@ -8,8 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class MoneyTransferConfiguration extends Configuration {
-    // TODO: implement service configuration
-
     @Valid
     @NotNull
     @JsonProperty("database")

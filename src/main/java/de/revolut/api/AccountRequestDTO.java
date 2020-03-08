@@ -1,6 +1,5 @@
 package de.revolut.api;
 
-import javax.validation.constraints.Max;
 import java.math.BigDecimal;
 
 public class AccountRequestDTO {

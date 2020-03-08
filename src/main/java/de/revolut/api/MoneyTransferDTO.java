@@ -1,7 +1,5 @@
 package de.revolut.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -22,17 +20,14 @@ public class MoneyTransferDTO {
         this.amount = amount;
     }
 
-    @JsonProperty
     public UUID getReceiverAccountUuid() {
         return receiverAccountUuid;
     }
 
-    @JsonProperty
     public UUID getSenderAccountUuid() {
         return senderAccountUuid;
     }
 
-    @JsonProperty
     public BigDecimal getAmount() {
         return amount;
     }

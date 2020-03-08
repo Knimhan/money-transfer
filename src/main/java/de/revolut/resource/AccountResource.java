@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import de.revolut.api.AccountRequestDTO;
 import de.revolut.core.service.AccountService;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,7 +40,7 @@ public class AccountResource {
 
     @POST
     @Timed
-    public Response post(AccountRequestDTO accountRequestDTO) {
+    public Response post(@Valid AccountRequestDTO accountRequestDTO) {
 
         return Response.ok()
                 .entity(accountService.save(accountRequestDTO))

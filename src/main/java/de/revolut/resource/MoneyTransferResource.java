@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import de.revolut.api.MoneyTransferDTO;
 import de.revolut.core.service.MoneyTransferService;
 
+import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,7 +26,7 @@ public class MoneyTransferResource {
 
     @POST
     @Timed
-    public Response transfer(MoneyTransferDTO moneyTransferDTO) {
+    public Response transfer(@Valid MoneyTransferDTO moneyTransferDTO) {
         moneyTransferService.transfer(moneyTransferDTO);
         return Response.ok().build();
     }

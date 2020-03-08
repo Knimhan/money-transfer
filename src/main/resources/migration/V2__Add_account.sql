@@ -1,1 +1,0 @@
-insert into ACCOUNT (ID, BALANCE) values (1, 10);

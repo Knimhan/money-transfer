@@ -1,7 +1,5 @@
 package de.revolut.core.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -14,9 +12,6 @@ public class Account {
     private String accountHolder;
 
     private String currency;
-
-    public Account() {
-    }
 
     public Account(UUID id, BigDecimal balance, String accountHolder, String currency) {
         this.id = id;

@@ -1,6 +1,7 @@
 package de.revolut.core.service;
 
 import de.revolut.api.MoneyTransferDTO;
+import de.revolut.core.exception.AccountNotFoundException;
 import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.exception.InsufficientBalanceException;
 import de.revolut.core.model.Account;
@@ -43,7 +44,7 @@ public class MoneyTransferServiceTest {
     public void shouldThrowExceptionWhenMoneyTransferDTOHasInvalidAmount() {
 
         //given
-        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO();
+        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(null, null, new BigDecimal(-10));
 
         //when
         Throwable exception = assertThrows(BadTransactionRequestException.class,
@@ -53,6 +54,18 @@ public class MoneyTransferServiceTest {
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Amount to be transferred can not be null or negative",
                 exception.getMessage());
+
+        //given
+        MoneyTransferDTO moneyTransferDTO1 = new MoneyTransferDTO(null, null, null);
+
+        //when
+        Throwable exception1 = assertThrows(BadTransactionRequestException.class,
+                () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO1));
+
+        //then
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Amount to be transferred can not be null or negative",
+                exception1.getMessage());
     }
 
     @Test
@@ -128,6 +141,29 @@ public class MoneyTransferServiceTest {
                         "Insufficient funds at senders account to make the transfer",
                 exception.getMessage());
     }
+
+
+    @Test
+    public void shouldThrowExceptionWhenAccountNotFound() {
+
+        //given
+        UUID senderAccountUuid = UUID.randomUUID();
+        UUID receiverAccountUuid = UUID.randomUUID();
+        BigDecimal amountTobeTransferred = new BigDecimal(100);
+        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
+                senderAccountUuid, amountTobeTransferred);
+        //when
+        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(null);
+        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(new Account(senderAccountUuid, new BigDecimal(50), null, null));
+        Throwable exception = assertThrows(AccountNotFoundException.class,
+                () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
+
+        //then
+        assertEquals("Money transfer application can not find account: " +
+                        "Account with " + receiverAccountUuid + " does not exist",
+                exception.getMessage());
+    }
+
 
     @Test
     public void shouldTransferMoneySuccessfully() {

@@ -15,13 +15,6 @@ public class AccountResponseDTO {
     public AccountResponseDTO() {
     }
 
-    public AccountResponseDTO(UUID id, BigDecimal balance, String accountHolder, String currency) {
-        this.id = id;
-        this.balance = balance;
-        this.accountHolder = accountHolder;
-        this.currency = currency;
-    }
-
     public UUID getId() {
         return id;
     }

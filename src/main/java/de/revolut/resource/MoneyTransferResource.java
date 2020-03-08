@@ -17,9 +17,6 @@ public class MoneyTransferResource {
 
     private MoneyTransferService moneyTransferService;
 
-    public MoneyTransferResource() {
-    }
-
     public MoneyTransferResource(MoneyTransferService moneyTransferService) {
         this.moneyTransferService = moneyTransferService;
     }

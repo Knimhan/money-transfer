@@ -1,6 +1,8 @@
 package de.revolut.core.service;
 
 import de.revolut.api.AccountRequestDTO;
+import de.revolut.core.exception.AccountCreationException;
+import de.revolut.core.exception.AccountNotFoundException;
 import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.model.Account;
 import de.revolut.db.AccountDAO;
@@ -65,6 +67,19 @@ public class AccountServiceTest {
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Balance can not be null or less than zero",
                 exception.getMessage());
+
+
+        //given
+        AccountRequestDTO accountRequestDTO1 = new AccountRequestDTO(null, null, null);
+
+        //when
+        Throwable exception1 = assertThrows(BadTransactionRequestException.class,
+                () -> accountServiceUnderTest.save(accountRequestDTO1));
+
+        //then
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Balance can not be null or less than zero",
+                exception1.getMessage());
     }
 
     @Test
@@ -79,6 +94,43 @@ public class AccountServiceTest {
         //then
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Invalid uuid",
+                exception.getMessage());
+    }
+
+
+    @Test
+    public void shouldThrowExceptionWhenCreationFails() {
+        //given
+        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(100), null, null);
+        when(accountDAO.insert(any(Account.class))).thenReturn(0);
+        when(accountDAO.getByUuid(any(UUID.class)))
+                .thenReturn(new Account(UUID.randomUUID(),
+                        accountRequestDTO.getBalance(), null, null));
+
+        //when
+        Throwable exception = assertThrows(AccountCreationException.class,
+                () -> accountServiceUnderTest.save(accountRequestDTO));
+
+        //then
+        assertEquals("Money transfer application failed to create account: " +
+                        "Account could not be created",
+                exception.getMessage());
+
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenAccountNotFound() {
+        //given
+        UUID uuid = UUID.randomUUID();
+        when(accountDAO.getByUuid(uuid)).thenReturn(null);
+
+        //when
+        Throwable exception = assertThrows(AccountNotFoundException.class,
+                () -> accountServiceUnderTest.getOne(uuid.toString()));
+
+        //then
+        assertEquals("Money transfer application can not find account: " +
+                        "Account with " + uuid + " does not exist",
                 exception.getMessage());
     }
 

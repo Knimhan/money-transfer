@@ -30,7 +30,7 @@ public class MoneyTransferResourceTest {
                 .thenReturn(AccountFixture.senderAccount());
         when(accountDAO.getByUuid(AccountFixture.receiverAccountUUID))
                 .thenReturn(AccountFixture.receiverAccount());
-        when(accountDAO.update(any(), any())).thenReturn(1);
+        when(accountDAO.updateBalance(any(), any())).thenReturn(1);
 
         Response response = moneyTransferResource.client()
                 .target("/money-transfer")

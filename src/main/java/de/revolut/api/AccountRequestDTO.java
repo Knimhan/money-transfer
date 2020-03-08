@@ -8,6 +8,8 @@ public class AccountRequestDTO {
     public AccountRequestDTO() {
     }
 
+    //TODO : Add account Holder details
+    // Add currency
     public AccountRequestDTO(BigDecimal balance) {
         this.balance = balance;
     }

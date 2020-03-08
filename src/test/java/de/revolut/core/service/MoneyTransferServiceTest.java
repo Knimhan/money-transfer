@@ -50,7 +50,8 @@ public class MoneyTransferServiceTest {
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
-        assertEquals("Amount to be transferred can not be null or negative",
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Amount to be transferred can not be null or negative",
                 exception.getMessage());
     }
 
@@ -66,7 +67,8 @@ public class MoneyTransferServiceTest {
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
-        assertEquals("Sender account can not be null",
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Sender account can not be null",
                 exception.getMessage());
     }
 
@@ -82,7 +84,8 @@ public class MoneyTransferServiceTest {
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
-        assertEquals("Receiver account can not be null",
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Receiver account can not be null",
                 exception.getMessage());
     }
 
@@ -99,7 +102,8 @@ public class MoneyTransferServiceTest {
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
-        assertEquals("Sender and receiver account can not be same",
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Sender and receiver account can not be same",
                 exception.getMessage());
     }
 
@@ -120,7 +124,8 @@ public class MoneyTransferServiceTest {
                 () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
-        assertEquals("Insufficient funds at senders account to make the transfer",
+        assertEquals("Money transfer application has failed due to: " +
+                        "Insufficient funds at senders account to make the transfer",
                 exception.getMessage());
     }
 
@@ -132,14 +137,14 @@ public class MoneyTransferServiceTest {
         BigDecimal amountTobeTransferred = new BigDecimal(10);
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
                 senderAccountUuid, amountTobeTransferred);
+        Account receiverAccount = new Account(receiverAccountUuid, new BigDecimal(50));
+        Account senderAccount = new Account(senderAccountUuid, new BigDecimal(50));
         //when
-        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(new Account(receiverAccountUuid, new BigDecimal(50)));
-        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(new Account(senderAccountUuid, new BigDecimal(50)));
+        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(receiverAccount);
+        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(senderAccount);
         moneyTransferServiceUnderTest.transfer(moneyTransferDTO);
 
         //then
-        verify(accountDAO).update(senderAccountUuid, new BigDecimal(40));
-        verify(accountDAO).update(receiverAccountUuid, new BigDecimal(60));
+        verify(accountDAO).transfer(receiverAccount, senderAccount, amountTobeTransferred);
     }
-
 }

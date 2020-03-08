@@ -58,7 +58,8 @@ public class AccountServiceTest {
                 () -> accountServiceUnderTest.save(accountRequestDTO));
 
         //then
-        assertEquals("Balance cant not be null or less than zero",
+        assertEquals("Money transfer application has failed due to wrong inputs: " +
+                        "Balance cant not be null or less than zero",
                 exception.getMessage());
     }
 

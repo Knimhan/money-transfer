@@ -6,6 +6,7 @@ import java.util.UUID;
 public class AccountResponseDTO {
     private UUID id;
 
+    //TODO : If holder details added, add here as well
     private BigDecimal balance;
 
     public AccountResponseDTO() {

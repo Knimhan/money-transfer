@@ -42,4 +42,7 @@ public class AccountResource {
                 .entity(accountService.save(accountRequestDTO))
                 .build();
     }
+
+    //TODO : Question : Should we also have something /accounts/{accId} to get accountDetails for individual account.
+
 }

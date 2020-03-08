@@ -4,7 +4,6 @@ import de.revolut.api.MoneyTransferDTO;
 import de.revolut.core.exception.AccountNotFoundException;
 import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.exception.InsufficientBalanceException;
-import de.revolut.core.exception.TransactionFailedException;
 import de.revolut.core.model.Account;
 import de.revolut.db.AccountDAO;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MoneyTransferService { //TODO: Exception handling //TODO: TESTS
+public class MoneyTransferService {
 
     private static final Logger LOGGER = getLogger(MoneyTransferService.class);
 
@@ -63,18 +62,6 @@ public class MoneyTransferService { //TODO: Exception handling //TODO: TESTS
         if (senderAccount.getBalance().subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
             throw new InsufficientBalanceException("Insufficient funds at senders account to make the transfer");
         }
-        accountDAO.update(senderAccount.getId(), senderAccount.getBalance().subtract(amount));
-        LOGGER.info("Amount ${amount} debited from account ${senderAccount.getId()}");
-        try {
-            accountDAO.update(receiverAccount.getId(), receiverAccount.getBalance().add(amount));
-            LOGGER.info("Amount ${amount} credited to account ${receiverAccount.getId()}");
-        } catch (Exception e) { //TODO: catch exception?
-            // rollback credit if debit fails;
-            // if credit fails it will get out this method and transaction fails entirely
-            accountDAO.update(senderAccount.getId(), senderAccount.getBalance().add(amount));
-            throw new TransactionFailedException("Money transfer failed " + e.getMessage());
-        }
-
-        //TODO: write a procedure to make it in one transaction
+        accountDAO.transfer(receiverAccount, senderAccount, amount);
     }
 }

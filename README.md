@@ -25,5 +25,4 @@ curl -H "Content-type: application/json" -X POST -d '{"balance":"10.02"}' localh
 curl localhost:8090/accounts
 
 3. Transfer 
-
-curl -H "Content-type: application/json" -X POST -d '{"receiverAccountUuid":"2317b702-fe4f-45ab-bdaf-ff23dfbf751a","senderAccountUuid":"2985c170-071a-4629-9ce7-c8f3dac15764","amount":"1.02"}' localhost:8090/money-transfer
+curl -H "Content-type: application/json" -X POST -d '{"receiverAccountUuid":"259edead-4ba0-4012-a6cc-66e2fb53e7e0","senderAccountUuid":"fe729e28-1857-4896-9b47-a586a64375b3","amount":"1.02"}' localhost:8090/money-transfer

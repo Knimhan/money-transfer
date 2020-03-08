@@ -1,6 +1,7 @@
 package de.revolut.core.service;
 
 import de.revolut.api.AccountRequestDTO;
+import de.revolut.core.exception.AccountCreationException;
 import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.model.Account;
 import de.revolut.db.AccountDAO;
@@ -33,8 +34,8 @@ public class AccountService {
         validate(accountRequestDTO);
         UUID uuid = UUID.randomUUID();
         if (accountDAO.insert(new Account(uuid, accountRequestDTO.getBalance())) != 1)
-            throw new IllegalStateException("Account could not be created");
-        LOGGER.info("New account created");
+            throw new AccountCreationException("Account could not be created");
+        LOGGER.info("New account created ${uuid}");
         return accountDAO.getByUuid(uuid);
     }
 

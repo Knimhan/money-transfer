@@ -6,6 +6,7 @@ A REST API for money transfers between accounts.
 * Java
 * Dropwizard - Web framework
 * Maven - Build tool
+* h2 - In-memory database
 ### Other libraries used
 * Junit4 - testing
 * Mockito - mocking in tests

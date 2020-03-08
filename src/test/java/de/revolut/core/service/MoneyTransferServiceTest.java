@@ -6,6 +6,7 @@ import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.exception.InsufficientBalanceException;
 import de.revolut.core.model.Account;
 import de.revolut.db.AccountDAO;
+import de.revolut.fixture.AccountFixture;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +43,6 @@ public class MoneyTransferServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenMoneyTransferDTOHasInvalidAmount() {
-
         //given
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(null, null, new BigDecimal(-10));
 
@@ -54,23 +54,26 @@ public class MoneyTransferServiceTest {
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Amount to be transferred can not be null or negative",
                 exception.getMessage());
+    }
 
+    @Test
+    public void shouldThrowExceptionWhenMoneyTransferDTOHasNullAmount() {
         //given
-        MoneyTransferDTO moneyTransferDTO1 = new MoneyTransferDTO(null, null, null);
+        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(null, null, null);
 
         //when
-        Throwable exception1 = assertThrows(BadTransactionRequestException.class,
-                () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO1));
+        Throwable exception = assertThrows(BadTransactionRequestException.class,
+                () -> moneyTransferServiceUnderTest.transfer(moneyTransferDTO));
 
         //then
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Amount to be transferred can not be null or negative",
-                exception1.getMessage());
+                exception.getMessage());
+
     }
 
     @Test
     public void shouldThrowExceptionWhenMoneyTransferDTOHasInvalidSenderAccount() {
-
         //given
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(UUID.randomUUID(),
                 null, BigDecimal.TEN);
@@ -87,7 +90,6 @@ public class MoneyTransferServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenMoneyTransferDTOHasInvalidReciverAccount() {
-
         //given
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(null,
                 UUID.randomUUID(), BigDecimal.TEN);
@@ -104,8 +106,7 @@ public class MoneyTransferServiceTest {
 
 
     @Test
-    public void shouldThrowExceptionWhenMoneyTransferDTOHasSameSenderReciverAccount() {
-
+    public void shouldThrowExceptionWhenMoneyTransferDTOHasSameSenderReceiverAccount() {
         //given
         UUID uuid = UUID.randomUUID();
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(uuid, uuid, BigDecimal.TEN);
@@ -123,13 +124,13 @@ public class MoneyTransferServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenBalanceIsInvalid() {
-
         //given
         UUID senderAccountUuid = UUID.randomUUID();
         UUID receiverAccountUuid = UUID.randomUUID();
         BigDecimal amountTobeTransferred = new BigDecimal(100);
         MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
                 senderAccountUuid, amountTobeTransferred);
+
         //when
         when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(new Account(receiverAccountUuid, new BigDecimal(50), null, null));
         when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(new Account(senderAccountUuid, new BigDecimal(50), null, null));
@@ -145,7 +146,6 @@ public class MoneyTransferServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenAccountNotFound() {
-
         //given
         UUID senderAccountUuid = UUID.randomUUID();
         UUID receiverAccountUuid = UUID.randomUUID();
@@ -168,16 +168,14 @@ public class MoneyTransferServiceTest {
     @Test
     public void shouldTransferMoneySuccessfully() {
         //given
-        UUID senderAccountUuid = UUID.randomUUID();
-        UUID receiverAccountUuid = UUID.randomUUID();
-        BigDecimal amountTobeTransferred = new BigDecimal(10);
-        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(receiverAccountUuid,
-                senderAccountUuid, amountTobeTransferred);
-        Account receiverAccount = new Account(receiverAccountUuid, new BigDecimal(50), null, null);
-        Account senderAccount = new Account(senderAccountUuid, new BigDecimal(50), null, null);
+        BigDecimal amountTobeTransferred = BigDecimal.ONE;
+        MoneyTransferDTO moneyTransferDTO = new MoneyTransferDTO(AccountFixture.receiverAccountUUID,
+                AccountFixture.senderAccountUUID, amountTobeTransferred);
+        Account receiverAccount = AccountFixture.receiverAccount();
+        Account senderAccount = AccountFixture.senderAccount();
         //when
-        when(accountDAO.getByUuid(receiverAccountUuid)).thenReturn(receiverAccount);
-        when(accountDAO.getByUuid(senderAccountUuid)).thenReturn(senderAccount);
+        when(accountDAO.getByUuid(AccountFixture.receiverAccountUUID)).thenReturn(receiverAccount);
+        when(accountDAO.getByUuid(AccountFixture.senderAccountUUID)).thenReturn(senderAccount);
         moneyTransferServiceUnderTest.transfer(moneyTransferDTO);
 
         //then

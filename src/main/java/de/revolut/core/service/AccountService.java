@@ -37,16 +37,16 @@ public class AccountService {
     }
 
 
-    public AccountResponseDTO getOne(String uuidString) {
+    public AccountResponseDTO getOne(String accountUuidString) {
 
-        UUID uuid = null;
+        UUID accountUuid = null;
         try {
-            uuid = UUID.fromString(uuidString);
+            accountUuid = UUID.fromString(accountUuidString);
         } catch (IllegalArgumentException exception) {
             throw new BadTransactionRequestException("Invalid uuid");
         }
-        Account account = accountDAO.getByUuid(uuid);
-        if (account == null) throw new AccountNotFoundException("Account with " + uuid + " does not exist");
+        Account account = accountDAO.getByUuid(accountUuid);
+        if (account == null) throw new AccountNotFoundException("Account with " + accountUuid + " does not exist");
         return map(account);
     }
 
@@ -61,7 +61,6 @@ public class AccountService {
     }
 
     private void validate(AccountRequestDTO accountRequestDTO) {
-
         if (accountRequestDTO.getBalance() == null || accountRequestDTO.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new BadTransactionRequestException("Balance can not be null or less than zero");
         }

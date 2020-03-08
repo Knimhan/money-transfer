@@ -17,7 +17,7 @@ public interface AccountDAO {
     Logger LOGGER = getLogger(AccountDAO.class);
 
     @SqlUpdate("create table if not exists account (id uuid not null primary key, balance decimal not null, accountHolder varchar(50), currency varchar(5))")
-    void createTable();//TODO:move to migration
+    void createTable();
 
     @SqlQuery("select * from account")
     List<Account> getAll();

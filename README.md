@@ -7,7 +7,7 @@ A REST API for money transfers between accounts.
 * Dropwizard - Web framework
 * Maven - Build tool
 ### Other libraries used
-* Junit5 - testing
+* Junit4 - testing
 * Mockito - mocking in tests
 * JoCoCo - code coverage
 * Javax validator- request validation
@@ -46,7 +46,7 @@ Returns all the accounts available. 2 accounts have been created already.
 curl localhost:8090/accounts
 ```
 
-#### GET localhost:8090/accounts/{uuid}
+#### GET localhost:8090/accounts/{accountUuid}
 Returns information of one account if present otherwise throws exception.
 ```console
 curl localhost:8090/accounts/eced4dbb-e8ef-480e-83f9-185b4c0cdfc6

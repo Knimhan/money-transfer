@@ -24,8 +24,8 @@ public class AccountMapperTest {
                 .thenReturn(AccountFixture.receiverAccountUUID.toString());
         Mockito.when(resultSet.getBigDecimal("balance"))
                 .thenReturn(AccountFixture.receiverAccount().getBalance());
-        Mockito.when(resultSet.getString("accountHolder")).thenReturn("test");
-        Mockito.when(resultSet.getString("currency")).thenReturn("test");
+        Mockito.when(resultSet.getString("accountHolder")).thenReturn("Marcel");
+        Mockito.when(resultSet.getString("currency")).thenReturn("EUR");
 
         AccountMapper accountMapper = new AccountMapper();
         Account account = accountMapper.map(1, resultSet, null);
@@ -33,7 +33,7 @@ public class AccountMapperTest {
         Assert.assertNotNull(account);
         Assert.assertEquals(AccountFixture.receiverAccountUUID.toString(), account.getId().toString());
         Assert.assertEquals(AccountFixture.receiverAccount().getBalance(), account.getBalance());
-        Assert.assertEquals("test", account.getAccountHolder());
-        Assert.assertEquals("test", account.getCurrency());
+        Assert.assertEquals("Marcel", account.getAccountHolder());
+        Assert.assertEquals("EUR", account.getCurrency());
     }
 }

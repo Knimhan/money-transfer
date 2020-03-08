@@ -29,12 +29,12 @@ public class AccountResource {
     }
 
     @GET
-    @Path("{uuid}")
+    @Path("{accountUuid}")
     @Timed
-    public Response getOne(@PathParam("uuid") String uuid) {
+    public Response getOne(@PathParam("accountUuid") String accountUuid) {
 
         return Response.ok()
-                .entity(accountService.getOne(uuid))
+                .entity(accountService.getOne(accountUuid))
                 .build();
     }
 

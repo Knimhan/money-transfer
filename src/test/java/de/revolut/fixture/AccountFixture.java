@@ -35,4 +35,8 @@ public class AccountFixture {
     public static Object getUnsuccessfulMoneyTransferDTO() {
         return new MoneyTransferDTO(receiverAccountUUID, senderAccountUUID, new BigDecimal(1000));
     }
+
+    public static Object getInvalidMoneyTransferDTO() {
+        return new MoneyTransferDTO(null, null, null);
+    }
 }

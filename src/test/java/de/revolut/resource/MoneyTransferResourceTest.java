@@ -25,7 +25,7 @@ public class MoneyTransferResourceTest {
 
 
     @Test
-    public void transferSuccesfully() {
+    public void transferSuccessfully() {
         when(accountDAO.getByUuid(AccountFixture.senderAccountUUID))
                 .thenReturn(AccountFixture.senderAccount());
         when(accountDAO.getByUuid(AccountFixture.receiverAccountUUID))
@@ -51,6 +51,20 @@ public class MoneyTransferResourceTest {
                 .request()
                 .post(Entity.json(AccountFixture.getUnsuccessfulMoneyTransferDTO()));
         Assert.assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void transferContractFailedDueToNullFields() {
+        Response response = moneyTransferResource.client()
+                .target("/money-transfer")
+                .request()
+                .post(Entity.json(AccountFixture.getInvalidMoneyTransferDTO()));
+
+        Assert.assertEquals(422, response.getStatus());
+        String responseString = response.readEntity(String.class);
+        Assert.assertTrue(responseString.contains("receiverAccountUuid may not be null"));
+        Assert.assertTrue(responseString.contains("senderAccountUuid may not be null"));
+        Assert.assertTrue(responseString.contains("amount may not be null"));
     }
 
 }

@@ -6,9 +6,12 @@ import de.revolut.core.exception.AccountNotFoundException;
 import de.revolut.core.exception.BadTransactionRequestException;
 import de.revolut.core.model.Account;
 import de.revolut.db.AccountDAO;
+import de.revolut.fixture.AccountFixture;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -16,7 +19,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -36,26 +39,25 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void shouldCreateAccountSuccessfully() { //TODO: modify this??
+    public void shouldCreateAccountSuccessfully() {
 
         //given
         AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(100), null, null);
+        Account account = AccountFixture.senderAccount();
         when(accountDAO.insert(any(Account.class))).thenReturn(1);
-        when(accountDAO.getByUuid(any(UUID.class)))
-                .thenReturn(new Account(UUID.randomUUID(),
-                        accountRequestDTO.getBalance(), null, null));
+        when(accountDAO.getByUuid(any(UUID.class))).thenReturn(account);
 
         //when
         accountServiceUnderTest.save(accountRequestDTO);
 
         //then
-        verify(accountDAO).insert(any(Account.class));
+        Mockito.verify(accountDAO, times(1))
+                .insert(ArgumentCaptor.forClass(Account.class).capture());
     }
 
 
     @Test
-    public void shouldThrowExceptionWhenBalanceIsInvalid() {
-
+    public void shouldThrowExceptionWhenBalanceIsNegative() {
         //given
         AccountRequestDTO accountRequestDTO = new AccountRequestDTO(new BigDecimal(-10), null, null);
 
@@ -67,19 +69,21 @@ public class AccountServiceTest {
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Balance can not be null or less than zero",
                 exception.getMessage());
+    }
 
-
+    @Test
+    public void shouldThrowExceptionWhenBalanceIsNull() {
         //given
-        AccountRequestDTO accountRequestDTO1 = new AccountRequestDTO(null, null, null);
+        AccountRequestDTO accountRequestDTO = new AccountRequestDTO(null, null, null);
 
         //when
-        Throwable exception1 = assertThrows(BadTransactionRequestException.class,
-                () -> accountServiceUnderTest.save(accountRequestDTO1));
+        Throwable exception = assertThrows(BadTransactionRequestException.class,
+                () -> accountServiceUnderTest.save(accountRequestDTO));
 
         //then
         assertEquals("Money transfer application has failed due to wrong inputs: " +
                         "Balance can not be null or less than zero",
-                exception1.getMessage());
+                exception.getMessage());
     }
 
     @Test
